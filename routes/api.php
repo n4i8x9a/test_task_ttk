@@ -23,7 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'books'], function () {
     Route::get('/', [BookController::class, 'list'])->name('books.list');
-
+    Route::post('/', [BookController::class, 'create'])->name('books.create');
+    Route::put('/', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/{id}/', [BookController::class, 'delete'])->name('books.delete');
 });
 
 Route::group(['prefix' => 'authors'], function () {

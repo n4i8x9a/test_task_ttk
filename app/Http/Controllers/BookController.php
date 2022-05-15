@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Book\BookCreateRequest;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
@@ -20,11 +21,23 @@ class BookController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param BookCreateRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(BookCreateRequest $request)
     {
-        //
+
+        $data = $request->json()->all();
+
+        $book = Book::create($data);
+
+        if ($book) {
+
+
+            return response($book);
+        } else {
+            return response('bb', 400);
+        }
     }
 
     /**
@@ -67,9 +80,16 @@ class BookController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $id = $request->json('id');
+        $book = Book::find($id);
+        if ($book) {
+            $book->update($request->json()->all());
+            return response($book);
+        } else {
+            return response('404', 404);
+        }
     }
 
     /**
@@ -78,9 +98,15 @@ class BookController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        $book = Book::find($id);
+        if ($book) {
+            $book->delete();
+            return response("{$id} deleted", 200);
+        } else {
+            return response("404", 404);
+        }
     }
 
     public function list()

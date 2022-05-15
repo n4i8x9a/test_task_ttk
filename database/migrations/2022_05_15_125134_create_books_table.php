@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->char('title',150);
+            $table->string('title',150);
             $table->integer('year');
-            $table->char('description',2000);
-            $table->char('image',500);
+            $table->string('description',2000);
+            $table->string('image',500);
             $table->integer('author_id');
             $table->integer('section_id');
             $table->foreign('author_id')->references('id')->on('authors');
