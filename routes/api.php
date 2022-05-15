@@ -26,6 +26,8 @@ Route::group(['prefix' => 'books'], function () {
     Route::post('/', [BookController::class, 'create'])->name('books.create');
     Route::put('/', [BookController::class, 'update'])->name('books.update');
     Route::delete('/{id}/', [BookController::class, 'delete'])->name('books.delete');
+    Route::post('/image', [BookController::class, 'addImage'])->name('books.addImage');
+    Route::get('/{id}/', [BookController::class, 'get'])->name('books.get');
 });
 
 Route::group(['prefix' => 'authors'], function () {

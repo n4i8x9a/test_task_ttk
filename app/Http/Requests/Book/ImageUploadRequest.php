@@ -6,7 +6,7 @@ namespace App\Http\Requests\Book;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BookUpdateRequest extends FormRequest
+class ImageUploadRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,12 +17,9 @@ class BookUpdateRequest extends FormRequest
     {
         return [
             'id' => 'required|integer',
-            'title' => 'string|max:150',
-            'year' => 'integer',
-            'description' => 'string|max:2000',
-            //'image' => 'required|string|max:500',
-            'author_id' => 'integer',
-            'section_id' => 'integer',
+
+            'image' => 'required|max:500|mimes:jpg,jpeg,png'
+
         ];
     }
 }

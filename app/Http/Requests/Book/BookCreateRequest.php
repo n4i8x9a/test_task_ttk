@@ -17,7 +17,7 @@ class BookCreateRequest extends FormRequest
             'title' => 'required|string|max:150',
             'year' => 'required|integer',
             'description' => 'required|string|max:2000',
-            'image' => 'required|string|max:500',
+            //'image' => 'required|string|max:500',
             'author_id' => 'required|integer',
             'section_id' => 'required|integer',
         ];
