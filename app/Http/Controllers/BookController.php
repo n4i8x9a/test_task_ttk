@@ -39,6 +39,7 @@ class BookController extends Controller
         $data = $request->json()->all();
         $data['image'] = "/assets/images/default_book_image.png";
         $data['user_id'] = $user->toArray()['id'];
+        $data['visible'] = true;
         $book = Book::create($data);
 
         if ($book) {
@@ -67,7 +68,9 @@ class BookController extends Controller
             if ($book->toArray()['user_id'] != $user->toArray()['id']) {
                 return response('403', 403);
             }
-            $book->update($request->json()->all());
+            $requestData = $request->json()->all();
+            unset($requestData['visible']);
+            $book->update($requestData);
             $data = $book->toArray();
             if (Storage::exists($book['image'])) {
                 $data['image'] = Storage::url($book['image']);
@@ -133,7 +136,7 @@ class BookController extends Controller
 
     public function list()
     {
-        $books = Book::all();
+        $books = Book::all()->where('visible', '=', true);
 
         $data = array_map(function ($book) {
             if (Storage::exists($book['image'])) {
@@ -143,5 +146,27 @@ class BookController extends Controller
         }, $books->toArray());
 
         return response($data);
+    }
+
+    public function hide($id)
+    {
+        $book = Book::find($id);
+        if ($book) {
+            $book->update(['visible' => false]);
+            return response('hide');
+        } else {
+            return response('not found', 404);
+        }
+    }
+
+    public function makeVisible($id)
+    {
+        $book = Book::find($id);
+        if ($book) {
+            $book->update(['visible' => true]);
+            return response('visible');
+        } else {
+            return response('not found', 404);
+        }
     }
 }

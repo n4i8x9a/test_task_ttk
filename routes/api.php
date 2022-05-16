@@ -35,6 +35,8 @@ Route::group(['prefix' => 'books'], function () {
     Route::delete('/{id}/', [BookController::class, 'delete'])->name('books.delete')->middleware('auth:api');
     Route::post('/image', [BookController::class, 'addImage'])->name('books.addImage')->middleware('auth:api');
     Route::get('/{id}/', [BookController::class, 'get'])->name('books.get');
+    Route::get('/{id}/hide', [BookController::class, 'hide'])->name('books.hide')->middleware(['auth:api', 'role', 'scope:admin']);
+    Route::get('/{id}/visible', [BookController::class, 'makeVisible'])->name('books.visible')->middleware(['auth:api', 'role', 'scope:admin']);
 });
 
 Route::group(['prefix' => 'authors', 'middleware' => ['auth:api', 'role']], function () {
