@@ -6,6 +6,7 @@ use App\Http\Requests\Book\BookCreateRequest;
 use App\Http\Requests\Book\ImageUploadRequest;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 
@@ -34,10 +35,10 @@ class BookController extends Controller
      */
     public function create(BookCreateRequest $request)
     {
-
+        $user = Auth::user();
         $data = $request->json()->all();
         $data['image'] = "/assets/images/default_book_image.png";
-
+        $data['user_id'] = $user->toArray()['id'];
         $book = Book::create($data);
 
         if ($book) {
@@ -61,7 +62,11 @@ class BookController extends Controller
     {
         $id = $request->json('id');
         $book = Book::find($id);
+        $user = Auth::user();
         if ($book) {
+            if ($book->toArray()['user_id'] != $user->toArray()['id']) {
+                return response('403', 403);
+            }
             $book->update($request->json()->all());
             $data = $book->toArray();
             if (Storage::exists($book['image'])) {
@@ -82,7 +87,14 @@ class BookController extends Controller
     public function delete(int $id)
     {
         $book = Book::find($id);
+        $user = Auth::user();
         if ($book) {
+            if ($book->toArray()['user_id'] != $user->toArray()['id']) {
+                return response('403', 403);
+            }
+            if (Storage::exists($book['image'])) {
+                Storage::delete($book['image']);
+            }
             $book->delete();
             return response("{$id} deleted", 200);
         } else {
@@ -95,7 +107,11 @@ class BookController extends Controller
 
         $id = (int)$request->get('id');
         $book = Book::find($id);
+        $user = Auth::user();
         if ($book) {
+            if ($book->toArray()['user_id'] != $user->toArray()['id']) {
+                return response('403', 403);
+            }
             if ($request->file('image')) {
                 $path = $request->file('image')->store('public/images');
                 $oldPath = $book['image'];

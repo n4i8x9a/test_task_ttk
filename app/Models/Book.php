@@ -22,7 +22,8 @@ class Book extends Model
         'description',
         'image',
         'author_id',
-        'section_id'
+        'section_id',
+        'user_id'
 
 
     ];

@@ -30,10 +30,10 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['prefix' => 'books'], function () {
     Route::get('/', [BookController::class, 'list'])->name('books.list');
-    Route::post('/', [BookController::class, 'create'])->name('books.create');
-    Route::put('/', [BookController::class, 'update'])->name('books.update');
-    Route::delete('/{id}/', [BookController::class, 'delete'])->name('books.delete');
-    Route::post('/image', [BookController::class, 'addImage'])->name('books.addImage');
+    Route::post('/', [BookController::class, 'create'])->name('books.create')->middleware('auth:api');
+    Route::put('/', [BookController::class, 'update'])->name('books.update')->middleware('auth:api');
+    Route::delete('/{id}/', [BookController::class, 'delete'])->name('books.delete')->middleware('auth:api');
+    Route::post('/image', [BookController::class, 'addImage'])->name('books.addImage')->middleware('auth:api');
     Route::get('/{id}/', [BookController::class, 'get'])->name('books.get');
 });
 
