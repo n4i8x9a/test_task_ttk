@@ -18,12 +18,13 @@ class Section extends Model
         'id',
         'name',
         'description',
+        'visible'
 
 
     ];
 
     public function books()
     {
-        return $this->hasMany(Book::class,'section_id');
+        return $this->hasMany(Book::class, 'section_id');
     }
 }

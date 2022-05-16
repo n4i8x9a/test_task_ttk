@@ -90,11 +90,8 @@ class BookController extends Controller
     public function delete(int $id)
     {
         $book = Book::find($id);
-        $user = Auth::user();
+
         if ($book) {
-            if ($book->toArray()['user_id'] != $user->toArray()['id']) {
-                return response('403', 403);
-            }
             if (Storage::exists($book['image'])) {
                 Storage::delete($book['image']);
             }
