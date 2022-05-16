@@ -1,0 +1,28 @@
+.header {
+
+  background: white;
+  margin: 0 auto;
+
+  height: min-content;
+  padding-left: 2%;
+  padding-right: 2%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid $ms-color-gray40;
+
+  h2 {
+    font-family: 'Segoe UI';
+  }
+
+  p {
+    font-family: 'Segoe UI';
+  }
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  width: 9em;
+  align-items: center;
+}

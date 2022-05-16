@@ -1,0 +1,17 @@
+{
+    "resolveJsonModule": true,
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "jsx": "react",
+        "sourceMap": false,
+        "strict": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": [
+        "resources/js/**/*"
+    ]
+}

@@ -1,0 +1,34 @@
+{
+  "chooseLanguage": "Choose language",
+  "mainPage":
+  {
+    "header": "Library",
+    "author": "author : ",
+    "year": "year : ",
+    "publisher": "publisher : ",
+    "az": "A-Z",
+    "za": "Z-A",
+    "asc": "Ascending",
+    "desc": "Descending",
+    "search": "Search",
+    "authorsPhilter": "Select authors",
+    "publishersPhilter": "Select publishers",
+    "yearsPhilter": "Select years",
+    "titleSort": "Title sort",
+    "yearsSort": "Years sort",
+    "ratingSort": "Rating sort",
+    "noneSort": "None"
+
+  },
+  "bookPage": {
+    "header": "Book",
+  "download": "Download",
+    "notFound": "Book not found"
+
+  },
+  "favoritesPage": {
+    "header":"Favorites"
+  }
+
+
+}
