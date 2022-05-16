@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Auth\AuthLoginRequest;
 use App\Http\Requests\Auth\AuthRegisterRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
+
     public function register(AuthRegisterRequest $request)
     {
         $data = $request->json()->all();
@@ -22,7 +25,7 @@ class AuthController extends Controller
         $data['password'] = Hash::make($data['password']);
 
         $user = User::create($data);
-
+        Role::create(['user_id' => $user->toArray()['id'], 'role' => 'user']);
         if ($user) {
 
 
@@ -45,9 +48,13 @@ class AuthController extends Controller
         if (!Hash::check($data['password'], $user->password)) {
             return response(['message' => 'wrong'], 403);
         }
+        $userRole = $user->role()->first();
 
+        if ($userRole) {
+            $this->scope = $userRole->role;
+        }
 
-        $accessToken = $user->createToken('authToken')->accessToken;
+        $accessToken = $user->createToken('authToken', [$this->scope])->accessToken;
 
         return response(['user' => $user->toArray(), 'access_token' => $accessToken]);
 

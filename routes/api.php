@@ -37,10 +37,10 @@ Route::group(['prefix' => 'books'], function () {
     Route::get('/{id}/', [BookController::class, 'get'])->name('books.get');
 });
 
-Route::group(['prefix' => 'authors', 'middleware' => 'auth:api'], function () {
-    Route::get('/', [AuthorController::class, 'list'])->name('authors.list');
-    Route::get('/{id}/books/', [AuthorController::class, 'books'])->name('authors.books');
-    Route::get('/{id}/', [AuthorController::class, 'get'])->name('authors.get');
+Route::group(['prefix' => 'authors', 'middleware' => ['auth:api', 'role']], function () {
+    Route::get('/', [AuthorController::class, 'list'])->name('authors.list')->middleware(['scope:admin,user']);
+    Route::get('/{id}/books/', [AuthorController::class, 'books'])->name('authors.books')->middleware(['scope:admin,user']);
+    Route::get('/{id}/', [AuthorController::class, 'get'])->name('authors.get')->middleware(['scope:admin']);
 
 });
 
