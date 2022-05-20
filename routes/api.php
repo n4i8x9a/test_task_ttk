@@ -31,7 +31,7 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'books'], function () {
-    Route::get('/', [BookController::class, 'list'])->name('books.list');
+    Route::post('/list', [BookController::class, 'list'])->name('books.list');
     Route::post('/', [BookController::class, 'create'])->name('books.create')->middleware('auth:api');
     Route::put('/', [BookController::class, 'update'])->name('books.update')->middleware('auth:api');
     Route::delete('/{id}/', [BookController::class, 'delete'])->name('books.delete')->middleware(['auth:api', 'role', 'scope:admin']);
@@ -51,11 +51,11 @@ Route::group(['prefix' => 'authors'], function () {
 });
 
 Route::group(['prefix' => 'sections'], function () {
-    Route::get('/', [SectionController::class, 'list'])->name('sections.list');
+    Route::post('/list', [SectionController::class, 'list'])->name('sections.list');
     Route::post('/', [SectionController::class, 'create'])->name('sections.create')->middleware(['auth:api', 'role', 'scope:admin']);
     Route::put('/', [SectionController::class, 'update'])->name('sections.update')->middleware(['auth:api', 'role', 'scope:admin']);
     Route::delete('/{id}/', [SectionController::class, 'delete'])->name('sections.delete')->middleware(['auth:api', 'role', 'scope:admin']);
-    Route::get('/{id}/books/', [SectionController::class, 'books'])->name('sections.books');
+    Route::post('/{id}/books/', [SectionController::class, 'books'])->name('sections.books');
     Route::get('/{id}/', [SectionController::class, 'get'])->name('sections.get');
 });
 

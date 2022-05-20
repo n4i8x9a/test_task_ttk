@@ -2,17 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Book\BookListRequest;
 use App\Http\Requests\Section\SectionCreateRequest;
 use App\Http\Requests\Section\SectionUpdateRequest;
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SectionController extends Controller
 {
-    public function list()
+    public function list(BookListRequest $request)
     {
-        $sections = Section::all()->where('visible', '=', true);
-        return response($sections);
+        if (Auth::check()) {
+            $auth = true;
+        } else {
+            $auth = false;
+        }
+        $requestData = $request->json()->all();
+        $count = Section::all()->where('visible', '=', true)->count();
+        $offset = $requestData['offset'];
+        $take = $requestData['take'];
+        $sections = Section::all()
+            ->skip($offset)
+            ->take($take)->where('visible', '=', true)->toArray();
+
+        return response(['auth' => $auth, 'count' => $count,
+            'offset' => $offset, 'take' => $take, 'sections' => array_values($sections)]);
     }
 
     public function create(SectionCreateRequest $request)
@@ -65,20 +80,36 @@ class SectionController extends Controller
         return response($section);
     }
 
-    public function books($id)
+    public function books(BookListRequest $request,$id)
     {
         $section = Section::find($id);
-
+        if (Auth::check())
+        {
+            $auth=true;
+        }
+        else
+        {
+            $auth=false;
+        }
         if (!$section) {
             return response('404', 404);
         }
         if (!$section['visible']) {
             return response('403', 403);
         }
-        $books = $section->books()->get()->where('visible', '=', true);
+        $requestData = $request->json()->all();
+        $count=$section->books()->get()->where('visible', '=', true)->count();
+        $offset=$requestData['offset'];
+        $take=$requestData['take'];
+        $books = $section->books()->get()
+            ->skip($offset)
+            ->take($take)
+            ->where('visible', '=', true)->toArray();
 
 
-        return response($books);
+        return response(['auth'=>$auth,
+            'section'=>$section->toArray(),
+            'count'=>$count,'offset'=>$offset,'take'=>$take,'books'=>array_values($books)]);;
 
     }
 }

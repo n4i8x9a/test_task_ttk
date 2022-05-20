@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Book\BookCreateRequest;
+use App\Http\Requests\Book\BookListRequest;
 use App\Http\Requests\Book\ImageUploadRequest;
 use App\Models\Book;
 use App\Models\Section;
@@ -181,11 +182,20 @@ class BookController extends Controller
 
     }
 
-    public function list()
+    public function list(BookListRequest $request)
     {
+        if (Auth::check())
+        {
+            $auth=true;
+        }
+        else
+        {
+            $auth=false;
+        }
+        $requestData = $request->json()->all();
         $count=Book::all()->where('visible', '=', true)->count();
-        $offset=5;
-        $take=55;
+        $offset=$requestData['offset'];
+        $take=$requestData['take'];
         $books = Book::all()
             ->sortByDesc('visible')
             ->sortByDesc('created_at')
@@ -201,7 +211,8 @@ class BookController extends Controller
             return $book;
         }, $books->toArray());
 
-        return response(['count'=>$count,'offset'=>$offset,'take'=>$take,'books'=>array_values($data)]);
+
+        return response(['auth'=>$auth,'count'=>$count,'offset'=>$offset,'take'=>$take,'books'=>array_values($data)]);
     }
 
     public function hide($id)

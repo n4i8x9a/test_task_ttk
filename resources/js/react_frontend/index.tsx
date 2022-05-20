@@ -9,7 +9,6 @@ import Header from "./components/Header/";
 import {initializeIcons} from '@fluentui/font-icons-mdl2';
 import {createStore} from 'redux'
 import reducer from './reducers/index'
-import {initAction} from "./actions/book";
 import {Provider} from 'react-redux'
 import Book from "./pages/book";
 import {windowResizeAction} from "./actions/app";
@@ -17,6 +16,9 @@ import i18next from "i18next";
 import {AuthInitAction} from "./actions/auth";
 import Login from "./pages/login/";
 import Account from "./pages/account";
+import BooksPage from "./pages/books";
+import SectionsPage from "./pages/sections";
+import SectionPage from "./pages/section";
 
 export const store = createStore(reducer);
 
@@ -60,17 +62,6 @@ checkToken().then(value => {
 });
 
 
-async function getBooks() {
-    let req = await fetch('/api/books');
-    if (req.ok) {
-        return req.json();
-    }
-}
-
-getBooks().then(value => {
-    store.dispatch(initAction(value.books));
-
-})
 
 
 function setTitle() {
@@ -91,6 +82,7 @@ ReactDOM.render(
         <Provider store={store}>
             <>
                 <Router>
+
                     <Header/>
 
                     <div className={'content'}>
@@ -104,8 +96,15 @@ ReactDOM.render(
                             <Route exact path="/books/:id">
                                 <Book/>
                             </Route>
+                            <Route exact path="/sections/:id">
+                                <SectionPage/>
+                            </Route>
                             <Route exact path="/books">
-                                <Redirect to={'/'}/>
+                                <BooksPage/>
+                            </Route>
+
+                            <Route exact path="/sections">
+                                <SectionsPage/>
                             </Route>
 
                             <Route exact path="/login">

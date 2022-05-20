@@ -3,6 +3,7 @@ import {connectElem} from "../../reducers";
 import {searchButtonShowAction, updateHeaderTextAction, updateTitleAction} from "../../actions/app";
 import {useTranslation} from "react-i18next";
 import Books from "../../components/Books";
+import {Link} from "react-router-dom";
 
 interface MainProps {
     state: any,
@@ -23,10 +24,13 @@ export function Main(props: MainProps) {
     }, [props.state.appReducer.title, props.state.appReducer.headerText])
 
 
-    return <Books
-        //@ts-ignore
-        books={props.state.bookReducer.books}/>
-
+    return (
+        <div>
+            <Link to={'/books'}>Books</Link>
+            <br/>
+            <Link to={'/sections'}>Sections</Link>
+        </div>
+    );
 }
 
 export default connectElem(Main);

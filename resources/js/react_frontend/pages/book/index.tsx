@@ -13,17 +13,16 @@ interface BookProps {
     dispatch: any
 }
 
+type BookURLparams = { id: string };
+
 function Book(props: BookProps) {
 
     const {t, i18n} = useTranslation('common');
-    let params: any = useParams();
 
 
-    let book: any = props.state.bookReducer.books.find((item: any, index: any) => {
-        if (item.id === Number(params.id)) {
-            return true;
-        }
-    });
+    let {id} = useParams<BookURLparams>();
+
+
     useEffect(() => {
         props.dispatch(updateTitleAction('bookPage.header'));
         props.dispatch(updateHeaderTextAction('bookPage.header'));
@@ -31,19 +30,18 @@ function Book(props: BookProps) {
 
     }, [props.state.appReducer.title,
 
-        props.state.appReducer.headerText, book])
-    if (book === undefined) {
+        props.state.appReducer.headerText])
 
-        return <div><h3>{t('bookPage.notFound')}</h3></div>
-    } else {
-        return (
-            <>
-                <BookCardBig
-                    // @ts-ignore
-                    book={book}/>
-            </>
-        );
-    }
+    return (
+        <>
+            <BookCardBig
+                // @ts-ignore
+                id={id}
+                //book={book}
+            />
+        </>
+    );
+
 }
 
 export default connectElem(Book);

@@ -1,19 +1,17 @@
-import React, {useState} from 'react';
-import {connectElem} from "../../reducers";
-import {useTranslation} from "react-i18next";
+import React, {useState} from "react";
 import BookCard from "../BookCard";
+import {connectElem} from "../../reducers";
+import SectionCard from "../SectionCard";
 
-import SearchContainer from "../SearchContainer";
-
-interface BooksProps {
+interface SectionsProps {
     state: any,
     dispatch: any,
-    books: any,
+    sections: any,
     loading:boolean
 }
 
 
-function Books(props: BooksProps) {
+function Sections(props: SectionsProps) {
 
     const [sortedBooks, setSortedBooks] = useState([]);
     const [isSearch, setIsSearch] = useState(false);
@@ -21,11 +19,11 @@ function Books(props: BooksProps) {
     let key = 0;
     let elArr = [];
     //let bookArr = sortedBooks.length === 0 && !isSearch ? props.books : sortedBooks;
-    let bookArr=props.books;
-    for (let book of bookArr) {
+    let secArr=props.sections;
+    for (let section of secArr) {
         elArr.push(
             // @ts-ignore
-            <BookCard key={key} book={book}/>
+            <SectionCard key={key} section={section}/>
         );
         key++;
     }
@@ -49,4 +47,4 @@ function Books(props: BooksProps) {
 
 }
 
-export default connectElem(Books);
+export default connectElem(Sections);
