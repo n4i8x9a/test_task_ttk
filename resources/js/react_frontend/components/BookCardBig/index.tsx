@@ -81,7 +81,7 @@ function BookCardBig(props: BookCardProps) {
                 <h2>{book?.title}</h2>
 
                 <p><span className={'bold_text'}>{t('mainPage.author')}</span></p>
-                <p>{book?.author.name}</p>
+                <p><LinkRouter to={`/authors/${book?.author.id}`}>{book?.author.name}</LinkRouter></p>
                 <p><span className={'bold_text'}>{"section"}</span></p>
                 <p><LinkRouter to={`/sections/${book?.section.id}`}>{book?.section.name}</LinkRouter></p>
 

@@ -38,7 +38,7 @@ function BookCard(props: BookCardProps) {
                 <div className={'book_info__'}>
                 <p><span className={'bold_text'}>{t('mainPage.author')}</span></p>
 
-                <p>{props.book.author.name}</p>
+                <p><LinkRouter to={`/authors/${props.book.author.id}`}>{props.book.author.name}</LinkRouter></p>
                 </div>
                 <div className={'book_info__'}>
                     <p><span className={'bold_text'}>{"секция :"}</span></p>

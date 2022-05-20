@@ -197,10 +197,9 @@ class BookController extends Controller
         $offset=$requestData['offset'];
         $take=$requestData['take'];
         $books = Book::all()
-            ->sortByDesc('visible')
-            ->sortByDesc('created_at')
+            ->where('visible', '=', true)
             ->skip($offset)
-            ->take($take)->where('visible', '=', true);
+            ->take($take);
 
         $data = array_map(function ($book) {
             if (Storage::exists($book['image'])) {

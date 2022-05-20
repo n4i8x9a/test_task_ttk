@@ -42,8 +42,8 @@ Route::group(['prefix' => 'books'], function () {
 });
 
 Route::group(['prefix' => 'authors'], function () {
-    Route::get('/', [AuthorController::class, 'list'])->name('authors.list');
-    Route::get('/{id}/books/', [AuthorController::class, 'books'])->name('authors.books');
+    Route::post('/list', [AuthorController::class, 'list'])->name('authors.list');
+    Route::post('/{id}/books/', [AuthorController::class, 'books'])->name('authors.books');
     Route::get('/{id}/', [AuthorController::class, 'get'])->name('authors.get');
     Route::post('/', [AuthorController::class, 'create'])->name('authors.create')->middleware(['auth:api', 'role', 'scope:admin']);
     Route::put('/', [AuthorController::class, 'update'])->name('authors.update')->middleware(['auth:api', 'role', 'scope:admin']);

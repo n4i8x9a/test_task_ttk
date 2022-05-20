@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import Main from "./pages/main/";
-import Favorites from "./pages/favorites";
+
 import './i18n/index'
 import Header from "./components/Header/";
 import {initializeIcons} from '@fluentui/font-icons-mdl2';
@@ -19,6 +19,8 @@ import Account from "./pages/account";
 import BooksPage from "./pages/books";
 import SectionsPage from "./pages/sections";
 import SectionPage from "./pages/section";
+import AuthorsPage from "./pages/authors";
+import AuthorPage from "./pages/author";
 
 export const store = createStore(reducer);
 
@@ -107,6 +109,12 @@ ReactDOM.render(
                                 <SectionsPage/>
                             </Route>
 
+                            <Route exact path="/authors">
+                                <AuthorsPage/>
+                            </Route>
+                            <Route exact path="/authors/:id">
+                                <AuthorPage/>
+                            </Route>
                             <Route exact path="/login">
                                 {store.getState().authReducer.authorized ?
                                     <Redirect to={'/'}/> :

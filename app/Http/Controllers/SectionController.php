@@ -101,10 +101,14 @@ class SectionController extends Controller
         $count=$section->books()->get()->where('visible', '=', true)->count();
         $offset=$requestData['offset'];
         $take=$requestData['take'];
-        $books = $section->books()->get()
+        $books = $section->books()
+
+            ->where('visible', '=', true)
+
             ->skip($offset)
             ->take($take)
-            ->where('visible', '=', true)->toArray();
+            ->get()
+            ->toArray();
 
 
         return response(['auth'=>$auth,

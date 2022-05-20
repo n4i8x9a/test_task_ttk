@@ -29,6 +29,8 @@ export function Main(props: MainProps) {
             <Link to={'/books'}>Books</Link>
             <br/>
             <Link to={'/sections'}>Sections</Link>
+            <br/>
+            <Link to={'/authors'}>Authors</Link>
         </div>
     );
 }
