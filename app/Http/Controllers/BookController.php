@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Book\BookCreateRequest;
 use App\Http\Requests\Book\ImageUploadRequest;
 use App\Models\Book;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Author;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 
 class BookController extends Controller
@@ -20,6 +22,9 @@ class BookController extends Controller
             return response('not found', 404);
         }
         $data = $book->toArray();
+        unset($data['author_id']);
+        unset($data['section_id']);
+        //$data['author']=$book->author();
         if (Storage::exists($data['image'])) {
             $data['image'] = Storage::url($data['image']);
         }
@@ -37,10 +42,29 @@ class BookController extends Controller
     {
         $user = Auth::user();
         $data = $request->json()->all();
-        $data['image'] = "/assets/images/default_book_image.png";
-        $data['user_id'] = $user->toArray()['id'];
-        $data['visible'] = true;
-        $book = Book::create($data);
+
+        $author = Author::find($data['author_id']);
+        $section = Section::find($data['section_id']);
+        if (!$author || !$section) {
+            return response('wrong author or section', 404);
+        }
+        $book = new Book;
+        $book->title = $data['title'];
+        $book->year = $data['year'];
+        $book->description = $data['description'];
+        $book->image = "/assets/images/default_book_image.png";
+        $book->visible = true;
+        $book->author()->associate($author);
+        $book->section()->associate($section);
+        $book->user()->associate($user);
+
+        $book->save();
+        //$data['image'] = "/assets/images/default_book_image.png";
+        //$data['user_id'] = $user->toArray()['id'];
+        //$data['visible'] = true;
+
+
+        //$book = Book::create($data);
 
         if ($book) {
 
@@ -61,16 +85,42 @@ class BookController extends Controller
      */
     public function update(Request $request)
     {
-        $id = $request->json('id');
+        $requestData = $request->json()->all();
+        $id = $requestData['id'];
         $book = Book::find($id);
         $user = Auth::user();
         if ($book) {
             if ($book->toArray()['user_id'] != $user->toArray()['id']) {
                 return response('403', 403);
             }
-            $requestData = $request->json()->all();
-            unset($requestData['visible']);
-            $book->update($requestData);
+            if (array_key_exists('author_id', $requestData)) {
+                $author = Author::find($requestData['author_id']);
+                if (!$author) {
+                    return response('404', 404);
+                }
+                $book->author()->associate($author);
+
+            }
+            if (array_key_exists('section_id', $requestData)) {
+                $section = Section::find($requestData['section_id']);
+                if (!$section) {
+                    return response('404', 404);
+                }
+                $book->section()->associate($section);
+            }
+
+            if (array_key_exists('title', $requestData)) {
+                $book->title = $requestData['title'];
+            }
+            if (array_key_exists('year', $requestData)) {
+                $book->year = $requestData['year'];
+            }
+            if (array_key_exists('description', $requestData)) {
+                $book->description = $requestData['description'];
+            }
+
+            $book->save();
+
             $data = $book->toArray();
             if (Storage::exists($book['image'])) {
                 $data['image'] = Storage::url($book['image']);
@@ -133,16 +183,25 @@ class BookController extends Controller
 
     public function list()
     {
-        $books = Book::all()->where('visible', '=', true);
+        $count=Book::all()->where('visible', '=', true)->count();
+        $offset=5;
+        $take=55;
+        $books = Book::all()
+            ->sortByDesc('visible')
+            ->sortByDesc('created_at')
+            ->skip($offset)
+            ->take($take)->where('visible', '=', true);
 
         $data = array_map(function ($book) {
             if (Storage::exists($book['image'])) {
                 $book['image'] = Storage::url($book['image']);
+                unset($book['author_id']);
+                unset($book['section_id']);
             }
             return $book;
         }, $books->toArray());
 
-        return response($data);
+        return response(['count'=>$count,'offset'=>$offset,'take'=>$take,'books'=>array_values($data)]);
     }
 
     public function hide($id)

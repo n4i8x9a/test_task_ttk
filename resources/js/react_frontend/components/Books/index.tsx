@@ -19,8 +19,8 @@ function Books(props: BooksProps) {
 
     let key = 0;
     let elArr = [];
-    let bookArr = sortedBooks.length === 0 && !isSearch ? props.books : sortedBooks;
-
+    //let bookArr = sortedBooks.length === 0 && !isSearch ? props.books : sortedBooks;
+    let bookArr=props.books;
     for (let book of bookArr) {
         elArr.push(
             // @ts-ignore

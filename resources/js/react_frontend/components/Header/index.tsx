@@ -7,6 +7,7 @@ import {Icon} from '@fluentui/react/lib/Icon';
 import {changeLanguageAction, searchButtonValueAction} from "../../actions/app";
 import {Panel} from '@fluentui/react/lib/Panel';
 import {Dropdown, IDropdownOption} from '@fluentui/react/lib/Dropdown';
+import {AuthLogoutAction} from "../../actions/auth";
 
 
 interface HeaderProps {
@@ -21,7 +22,24 @@ function Header(props: HeaderProps) {
         {key: 'en', text: 'English'},
 
     ];
+    const signOut = async () => {
+        let req = await fetch('/api/auth/logout', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${props.state.authReducer.token}`
+            },
 
+        });
+        if (req.ok || req.status == 401) {
+
+            localStorage.removeItem('auth_token');
+            return true;
+        } else {
+            return false;
+        }
+    }
     const {t, i18n} = useTranslation('common');
     const [homeIcon, setHomeIcon] = useState("Home");
     const [favIcon, setFavIcon] = useState("FavoriteStar");
@@ -53,12 +71,7 @@ function Header(props: HeaderProps) {
                         onMouseEnter={() => setHomeIcon('HomeSolid')}
                         onMouseLeave={() => setHomeIcon('Home')}
                     /></Link>
-                    <Link to='/favorites'><Icon iconName={favIcon}
-                                                style={{zoom: "140%"}}
 
-                                                onMouseEnter={() => setFavIcon('FavoriteStarFill')}
-                                                onMouseLeave={() => setFavIcon('FavoriteStar')}
-                    /></Link>
 
                     <LinkF
                         onClick={() => {
@@ -68,6 +81,37 @@ function Header(props: HeaderProps) {
                            style={{zoom: "140%"}}
 
                     /></LinkF>
+                    {
+                        props.state.authReducer.authorized ?
+                            <>
+                            <Link
+                                to='/account'
+                            ><Icon iconName={"FollowUser"}
+                                   style={{zoom: "140%"}}
+
+                            /></Link>
+                            <LinkF
+                                onClick={() => {
+                                    signOut().then(value => {
+                                        if (value) {
+                                            props.dispatch(AuthLogoutAction());
+                                        } else {
+                                            alert('can`t logout');
+                                        }
+                                    })
+                                }}
+                            ><Icon iconName={"SignOut"}
+                                   style={{zoom: "140%"}}
+
+                            /></LinkF> </>:
+                            <Link
+                                to='/login'
+                            ><Icon iconName={"Signin"}
+                                   style={{zoom: "140%"}}
+
+                            /></Link>
+                    }
+
 
                 </div>
             </div>

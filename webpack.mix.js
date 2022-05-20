@@ -15,4 +15,7 @@ mix
         }, resolve: {
             extensions: ["*", ".js", ".jsx", ".vue", ".ts", ".tsx"]
         }
-    });
+    })
+    .browserSync({
+    proxy: 'localhost:8000'
+});;

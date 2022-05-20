@@ -56,7 +56,7 @@ class AuthController extends Controller
 
         $accessToken = $user->createToken('authToken', [$this->scope])->accessToken;
 
-        return response(['user' => $user->toArray(), 'access_token' => $accessToken]);
+        return response(['user' => $user->toArray(), 'access_token' => $accessToken,'role'=>$userRole->role]);
 
     }
 
@@ -67,5 +67,17 @@ class AuthController extends Controller
         }
 
         return response(['message' => 'logout']);
+    }
+
+    public function checkAuth()
+    {
+        if (Auth::check()) {
+
+            $user = Auth::user();
+            $userRole = $user->role()->first();
+            $data = ['auth' => true, 'user_id' => $user['id'], 'role' => $userRole->role];
+            return response($data);
+        }
+
     }
 }

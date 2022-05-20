@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
     Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
     Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api')->name('auth.logout');
+    Route::get('/check', [AuthController::class, 'checkAuth'])->middleware(['auth:api'])->name('auth.check');
 });
 
 Route::group(['prefix' => 'books'], function () {
@@ -55,4 +57,9 @@ Route::group(['prefix' => 'sections'], function () {
     Route::delete('/{id}/', [SectionController::class, 'delete'])->name('sections.delete')->middleware(['auth:api', 'role', 'scope:admin']);
     Route::get('/{id}/books/', [SectionController::class, 'books'])->name('sections.books');
     Route::get('/{id}/', [SectionController::class, 'get'])->name('sections.get');
+});
+
+Route::group(['prefix' => 'user'], function () {
+    Route::get('/', [UserController::class, 'get'])->name('user.get')->middleware(['auth:api']);;
+
 });

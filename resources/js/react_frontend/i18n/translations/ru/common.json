@@ -28,6 +28,14 @@
   },
   "favoritesPage": {
     "header":"Избранное"
-  }
+  },
+    "loginPage": {
+        "header": "Войти"
+
+    },
+    "accountPage": {
+        "header": "Аккаунт"
+
+    }
 
 }

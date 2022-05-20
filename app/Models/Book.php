@@ -21,11 +21,27 @@ class Book extends Model
         'year',
         'description',
         'image',
-        'author_id',
-        'section_id',
+        //'author_id',
+        //'section_id',
         'user_id',
         'visible'
 
 
     ];
+    protected $with = ['author', 'section'];
+
+    public function author()
+    {
+        return $this->belongsTo(Author::class, 'author_id');
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class, 'section_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
