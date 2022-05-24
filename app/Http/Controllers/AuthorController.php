@@ -8,6 +8,7 @@ use App\Http\Requests\Book\BookListRequest;
 use Illuminate\Http\Request;
 use App\Models\Author;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AuthorController extends Controller
 {
@@ -22,6 +23,10 @@ class AuthorController extends Controller
         $count = Author::all()->count();
         $offset = $requestData['offset'];
         $take = $requestData['take'];
+        if ($take=-1)
+        {
+            $take=$count;
+        }
         $authors = Author::all()
             ->skip($offset)
             ->take($take)->toArray();
@@ -103,7 +108,14 @@ class AuthorController extends Controller
             ->get()
             ->toArray();
 
-
+        $books = array_map(function ($book) {
+            if (Storage::exists($book['image'])) {
+                $book['image'] = Storage::url($book['image']);
+                unset($book['author_id']);
+                unset($book['section_id']);
+            }
+            return $book;
+        }, $books);
         return response(['auth'=>$auth,
             'author'=>$author->toArray(),
             'count'=>$count,'offset'=>$offset,'take'=>$take,'books'=>array_values($books)]);;

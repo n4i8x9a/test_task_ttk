@@ -8,6 +8,7 @@ use App\Http\Requests\Section\SectionUpdateRequest;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class SectionController extends Controller
 {
@@ -22,9 +23,14 @@ class SectionController extends Controller
         $count = Section::all()->where('visible', '=', true)->count();
         $offset = $requestData['offset'];
         $take = $requestData['take'];
+        if ($take=-1)
+        {
+            $take=$count;
+        }
         $sections = Section::all()
+            ->where('visible', '=', true)
             ->skip($offset)
-            ->take($take)->where('visible', '=', true)->toArray();
+            ->take($take)->toArray();
 
         return response(['auth' => $auth, 'count' => $count,
             'offset' => $offset, 'take' => $take, 'sections' => array_values($sections)]);
@@ -110,7 +116,14 @@ class SectionController extends Controller
             ->get()
             ->toArray();
 
-
+        $books = array_map(function ($book) {
+            if (Storage::exists($book['image'])) {
+                $book['image'] = Storage::url($book['image']);
+                unset($book['author_id']);
+                unset($book['section_id']);
+            }
+            return $book;
+        }, $books);
         return response(['auth'=>$auth,
             'section'=>$section->toArray(),
             'count'=>$count,'offset'=>$offset,'take'=>$take,'books'=>array_values($books)]);;
