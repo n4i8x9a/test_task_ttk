@@ -15,10 +15,6 @@ export function updateHeaderTextAction(headerText:string)
 }
 
 
-export function windowResizeAction()
-{
-    return {type:'WINDOW_RESIZE',payload:{width:window.innerWidth,height:window.innerHeight}};
-}
 
 export function searchButtonShowAction(value:boolean)
 {

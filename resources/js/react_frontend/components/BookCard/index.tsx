@@ -16,29 +16,19 @@ interface BookCardProps {
 function BookCard(props: BookCardProps) {
     const {t, i18n} = useTranslation('common');
 
-    const starIcon = () => {
-        /*
-        if (props.book.favorites) {
-            return 'FavoriteStarFill'
-        } else {
-        */
-
-            return 'FavoriteStar';
-        };
-
 
     const linkStyle = {color: "rgb(0, 120, 212)", textDecoration: "none"}
     return (
         <div className={'book_card'}>
-            <img src={ props.book.image} width={100} height={70}></img>
+            <img src={props.book.image} width={100} height={70}></img>
             <div className={'book_info'}>
                 <div className={'book_info__'}>
-                <Link style={linkStyle} to={`/books/${props.book.id}`}><h3>{props.book.title}</h3></Link>
+                    <Link style={linkStyle} to={`/books/${props.book.id}`}><h3>{props.book.title}</h3></Link>
                 </div>
                 <div className={'book_info__'}>
-                <p><span className={'bold_text'}>{t('mainPage.author')}</span></p>
+                    <p><span className={'bold_text'}>{t('mainPage.author')}</span></p>
 
-                <p><LinkRouter to={`/authors/${props.book.author.id}`}>{props.book.author.name}</LinkRouter></p>
+                    <p><LinkRouter to={`/authors/${props.book.author.id}`}>{props.book.author.name}</LinkRouter></p>
                 </div>
                 <div className={'book_info__'}>
                     <p><span className={'bold_text'}>{"секция :"}</span></p>
@@ -46,8 +36,8 @@ function BookCard(props: BookCardProps) {
                     <p><LinkRouter to={`/sections/${props.book.section.id}`}>{props.book.section.name}</LinkRouter></p>
                 </div>
                 <div className={'book_info__'}>
-                <p><span className={'bold_text'}>{t('mainPage.year')}</span></p>
-                <p>{props.book.year}</p>
+                    <p><span className={'bold_text'}>{t('mainPage.year')}</span></p>
+                    <p>{props.book.year}</p>
                 </div>
 
             </div>

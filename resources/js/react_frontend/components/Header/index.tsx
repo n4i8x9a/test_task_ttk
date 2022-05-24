@@ -8,6 +8,7 @@ import {changeLanguageAction, searchButtonValueAction} from "../../actions/app";
 import {Panel} from '@fluentui/react/lib/Panel';
 import {Dropdown, IDropdownOption} from '@fluentui/react/lib/Dropdown';
 import {AuthLogoutAction} from "../../actions/auth";
+import Cookies from "js-cookie";
 
 
 interface HeaderProps {
@@ -34,7 +35,7 @@ function Header(props: HeaderProps) {
         });
         if (req.ok || req.status == 401) {
 
-            localStorage.removeItem('auth_token');
+            Cookies.remove('auth_token');
             return true;
         } else {
             return false;
@@ -42,7 +43,6 @@ function Header(props: HeaderProps) {
     }
     const {t, i18n} = useTranslation('common');
     const [homeIcon, setHomeIcon] = useState("Home");
-    const [favIcon, setFavIcon] = useState("FavoriteStar");
     const [languagePanel, setLanguagePanel] = useState(false);
     const onChangeLanguage = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
 
@@ -84,26 +84,26 @@ function Header(props: HeaderProps) {
                     {
                         props.state.authReducer.authorized ?
                             <>
-                            <Link
-                                to='/account'
-                            ><Icon iconName={"FollowUser"}
-                                   style={{zoom: "140%"}}
+                                <Link
+                                    to='/account'
+                                ><Icon iconName={"FollowUser"}
+                                       style={{zoom: "140%"}}
 
-                            /></Link>
-                            <LinkF
-                                onClick={() => {
-                                    signOut().then(value => {
-                                        if (value) {
-                                            props.dispatch(AuthLogoutAction());
-                                        } else {
-                                            alert('can`t logout');
-                                        }
-                                    })
-                                }}
-                            ><Icon iconName={"SignOut"}
-                                   style={{zoom: "140%"}}
+                                /></Link>
+                                <LinkF
+                                    onClick={() => {
+                                        signOut().then(value => {
+                                            if (value) {
+                                                props.dispatch(AuthLogoutAction());
+                                            } else {
+                                                alert('can`t logout');
+                                            }
+                                        })
+                                    }}
+                                ><Icon iconName={"SignOut"}
+                                       style={{zoom: "140%"}}
 
-                            /></LinkF> </>:
+                                /></LinkF> </> :
                             <Link
                                 to='/login'
                             ><Icon iconName={"Signin"}

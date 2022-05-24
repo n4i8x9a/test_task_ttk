@@ -3,10 +3,9 @@ import React, {useEffect, useState} from "react";
 import {searchButtonShowAction, updateHeaderTextAction, updateTitleAction} from "../../actions/app";
 import Books from "../../components/Books";
 import {connectElem} from "../../reducers";
-
+import Cookies from 'js-cookie';
 // @ts-ignore
 import Pagination from 'office-ui-fabric-react-pagination';
-import {SearchBox} from "@fluentui/react/lib/SearchBox";
 
 interface BooksPageProps {
     state: any,
@@ -58,14 +57,7 @@ export function BooksPage(props: BooksPageProps) {
 
             <div className={'books_left'}>
 
-                <SearchBox placeholder={t('mainPage.search')}
-                           //value={search}
-                           onChange={(event, newValue) => {
-                               //setSearch(String(newValue))
-                           }}
 
-                           //onSearch={newValue => setSearch(newValue)}
-                />
             </div>
                 <div className={'books_right'}>
 

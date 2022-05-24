@@ -8,6 +8,7 @@ import {changeLanguageAction, searchButtonValueAction} from "../../actions/app";
 import {Panel} from '@fluentui/react/lib/Panel';
 import {Dropdown, IDropdownOption} from '@fluentui/react/lib/Dropdown';
 import {AuthLoginAction} from "../../actions/auth";
+import Cookies from "js-cookie";
 
 
 interface LoginFormProps {
@@ -33,7 +34,7 @@ function LoginForm(props: LoginFormProps) {
         });
         if (req.ok) {
             let response = await req.json();
-            localStorage.setItem('auth_token', response.access_token);
+            Cookies.set('auth_token', response.access_token);
             return {authorized: true, token: response.access_token, userID: response.user.id, role: response.role};
         } else {
             return {authorized: false, token: null, userID: null, role: "guest"};

@@ -10,14 +10,14 @@ interface BookEditProps {
     book?: any,
     state: any,
     dispatch: any,
-    callBack:()=>any
+    callBack: () => any
 }
 
 
 function BookEdit(props: BookEditProps) {
     const {t, i18n} = useTranslation('common');
 
-    const [imBlob,setImblob]=useState(props.book.image);
+    const [imBlob, setImblob] = useState(props.book.image);
 
     const [id, setId] = useState<number>(props.book.id);
     const [title, setTitle] = useState<string>(props.book.title);
@@ -34,7 +34,7 @@ function BookEdit(props: BookEditProps) {
     const [authors, setAuthors] = useState<Array<{ key: number, text: string }>>();
     const [sections, setSections] = useState<Array<{ key: number, text: string }>>();
     const [fetched, setFetched] = useState(false);
-    const uploadImage=async (img:File)=>{
+    const uploadImage = async (img: File) => {
         let formData = new FormData();
         formData.append('id', String(id));
         formData.append('image', img);
@@ -42,13 +42,11 @@ function BookEdit(props: BookEditProps) {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${props.state.authReducer.token}`,
-                //"Accept": "multipart/formdata",
-                //"Content-Type": "multipart/formdata"
+
             },
             body: formData
         });
-        if (req.ok)
-        {
+        if (req.ok) {
             return await req.json();
         }
 
@@ -131,113 +129,116 @@ function BookEdit(props: BookEditProps) {
     }, [fetched]);
     // @ts-ignore
     return (<>
-        <div className={'book_edit'}>
-            <div style={{flexDirection:"column",display:"flex"}}>
-                <img src={imBlob} width={160} height={240}></img>
-                <PrimaryButton text={"UPLOAD"}
-                               onClick={()=>{
+            <div className={'book_edit'}>
+                <div style={{flexDirection: "column", display: "flex"}}>
+                    <img src={imBlob} width={160} height={240}></img>
+                    <PrimaryButton text={"UPLOAD"}
+                                   onClick={() => {
+                                       // @ts-ignore
+                                       document.getElementById("raised-button-file").click()
+                                   }}
+                    >
+                    </PrimaryButton>
+                </div>
+                <div>
+                    <Dropdown
+                        label="Author"
+                        // @ts-ignore
+                        selectedKey={author}
+                        // eslint-disable-next-line react/jsx-no-bind
+                        // @ts-ignore
+                        onChange={(e, author) => setAuthor(author)}
+                        // @ts-ignore
+                        placeholder={author.text}
+                        // @ts-ignore
+                        options={authors}
+                        //styles={dropdownStyles}
+                    />
+
+                    <Dropdown
+                        label="Section"
+                        // @ts-ignore
+                        selectedKey={section}
+                        // eslint-disable-next-line react/jsx-no-bind
+                        // @ts-ignore
+                        onChange={(e, section) => setSection(section)}
+                        // @ts-ignore
+                        placeholder={section.text}
+                        // @ts-ignore
+                        options={sections}
+                        //styles={dropdownStyles}
+                    />
+
+                    <TextField label="Title"
+                               value={title}
+                               onChange={(e, titl) => {
                                    // @ts-ignore
-                                   document.getElementById("raised-button-file").click()}}
+                                   setTitle(titl)
+                               }}
+                    />
+
+                    <TextField label="Year"
+                               value={String(year)}
+                               onChange={(e, yea) => {
+                                   // @ts-ignore
+                                   if (yea.match("[0-9]")) {
+                                       // @ts-ignore
+                                       setYear(Number(yea));
+                                   } else {
+                                       setYear(0);
+                                   }
+
+                               }}
+                    />
+                </div>
+                <TextField label="Description"
+                           value={description}
+                           multiline
+                           rows={5}
+                           onChange={(e, descr) => {
+                               // @ts-ignore
+                               setDescription(descr)
+                           }}
+                />
+
+
+                <input
+                    accept="image/jpg, image/jpeg, image/png"
+                    style={{display: 'none'}}
+                    id="raised-button-file"
+
+                    type="file"
+                    onChange={(event) => {
+                        let files = event.target.files;
+                        const reader = new FileReader();
+                        reader.addEventListener('load', (event) => {
+                            // @ts-ignore
+                            setImblob(event.target.result);
+                        });
+                        // @ts-ignore
+                        if (files != null) {
+                            if (files[0].size <= 1024 * 500) {
+                                uploadImage(files[0]).then(v => {
+                                    alert(v)
+                                });
+                                reader.readAsDataURL(files[0]);
+                            }
+                        }
+                    }}
+                />
+
+
+            </div>
+            <div>
+                <PrimaryButton text={"UPDATE"} onClick={() => update().then(v => alert(v))}/>
+                <PrimaryButton text={"BACK"}
+                               onClick={() => {
+                                   // @ts-ignore
+                                   props.callBack();
+                               }}
                 >
                 </PrimaryButton>
             </div>
-            <div>
-            <Dropdown
-                label="Author"
-                // @ts-ignore
-                selectedKey={author}
-                // eslint-disable-next-line react/jsx-no-bind
-                // @ts-ignore
-                onChange={(e, author) => setAuthor(author)}
-                // @ts-ignore
-                placeholder={author.text}
-                // @ts-ignore
-                options={authors}
-                //styles={dropdownStyles}
-            />
-
-            <Dropdown
-                label="Section"
-                // @ts-ignore
-                selectedKey={section}
-                // eslint-disable-next-line react/jsx-no-bind
-                // @ts-ignore
-                onChange={(e, section) => setSection(section)}
-                // @ts-ignore
-                placeholder={section.text}
-                // @ts-ignore
-                options={sections}
-                //styles={dropdownStyles}
-            />
-
-            <TextField label="Title"
-                       value={title}
-                       onChange={(e, titl) => {
-                           // @ts-ignore
-                           setTitle(titl)
-                       }}
-            />
-
-            <TextField label="Year"
-                       value={String(year)}
-                       onChange={(e, yea) => {
-                           // @ts-ignore
-                           if (yea.match("[0-9]")) {
-                               // @ts-ignore
-                               setYear(Number(yea));
-                           } else {
-                               setYear(0);
-                           }
-
-                       }}
-            />
-            </div>
-            <TextField label="Description"
-                       value={description}
-                       multiline
-                       rows={5}
-                       onChange={(e, descr) => {
-                           // @ts-ignore
-                           setDescription(descr)
-                       }}
-            />
-
-
-
-            <input
-                accept="image/jpg, image/jpeg, image/png"
-                style={{display: 'none'}}
-                id="raised-button-file"
-
-                type="file"
-                onChange={(event) => {
-                    let files = event.target.files;
-                    const reader = new FileReader();
-                    reader.addEventListener('load', (event) => {
-                        // @ts-ignore
-                        setImblob(event.target.result);
-                    });
-                    // @ts-ignore
-                    if (files != null) {
-                        if (files[0].size<=1024*500) {
-                            uploadImage(files[0]).then(v=>{alert(v)});
-                            reader.readAsDataURL(files[0]);
-                        }
-                    }
-                }}
-            />
-
-
-        </div>
-    <div>
-        <PrimaryButton text={"UPDATE"} onClick={()=>update().then(v=>alert(v))}/>
-        <PrimaryButton text={"BACK"}
-                       onClick={()=>{
-                           // @ts-ignore
-                           props.callBack();}}
-        >
-        </PrimaryButton>
-    </div>
         </>
     )
 

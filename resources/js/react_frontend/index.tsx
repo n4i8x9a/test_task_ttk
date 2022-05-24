@@ -11,7 +11,6 @@ import {createStore} from 'redux'
 import reducer from './reducers/index'
 import {Provider} from 'react-redux'
 import Book from "./pages/book";
-import {windowResizeAction} from "./actions/app";
 import i18next from "i18next";
 import {AuthInitAction} from "./actions/auth";
 import Login from "./pages/login/";
@@ -21,6 +20,7 @@ import SectionsPage from "./pages/sections";
 import SectionPage from "./pages/section";
 import AuthorsPage from "./pages/authors";
 import AuthorPage from "./pages/author";
+import Cookies from "js-cookie";
 
 export const store = createStore(reducer);
 
@@ -37,7 +37,7 @@ interface checkTokenResponse {
 }
 
 async function checkToken() {
-    let token: any = localStorage.getItem('auth_token');
+    let token: any = Cookies.get('auth_token');
     if (token == null) {
         return {authorized: false, token: null, userID: null, role: "guest"};
     }
@@ -53,7 +53,7 @@ async function checkToken() {
         let response: checkTokenResponse = await req.json();
         return {authorized: true, token: token, userID: response.user_id, role: response.role}
     } else {
-        localStorage.removeItem('auth_token');
+        Cookies.remove('auth_token');
         return {authorized: false, token: null, userID: null, role: "guest"};
     }
 }
@@ -75,9 +75,6 @@ function setTitle() {
 
 store.subscribe(setTitle);
 
-window.addEventListener(`resize`, event => {
-    store.dispatch(windowResizeAction());
-}, false);
 
 ReactDOM.render(
     <React.StrictMode>

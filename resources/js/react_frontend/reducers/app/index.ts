@@ -6,8 +6,7 @@ i18next
     .then();
 const InitialState = {
     headerText: '', title: '', language: i18next.language,
-    windowSize: {width: window.innerWidth, height: window.innerHeight},
-    isMobile: isMobile && !isTablet, searchButton: {button: false, panel: false}
+     searchButton: {button: false, panel: false}
 };
 
 export default function appReducer(state = InitialState, action: any) {
@@ -24,8 +23,7 @@ export default function appReducer(state = InitialState, action: any) {
 
         case 'SEARCH_BUTTON_VALUE':
             return {...state, searchButton: {button: state.searchButton.button, panel: action.payload.panel}}
-        case 'WINDOW_RESIZE':
-            return {...state, windowSize: {width: action.payload.width, height: action.payload.height}}
+
         default:
             return state
     }

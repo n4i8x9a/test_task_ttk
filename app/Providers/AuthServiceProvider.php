@@ -26,7 +26,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         Passport::routes();
-
+        Passport::tokensExpireIn(now()->addDays(3));
+        Passport::personalAccessTokensExpireIn(now()->addDays(3));
+        Passport::refreshTokensExpireIn(now()->addDays(10));
         Passport::tokensCan([
             'admin' => 'Add/Edit/Delete Users',
             'user' => 'List Users'

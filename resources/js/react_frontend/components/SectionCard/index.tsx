@@ -10,9 +10,8 @@ interface SectionCardProps {
 }
 
 
-function SectionCard(props:SectionCardProps) {
+function SectionCard(props: SectionCardProps) {
     const {t, i18n} = useTranslation('common');
-
 
 
     const linkStyle = {color: "rgb(0, 120, 212)", textDecoration: "none"}
